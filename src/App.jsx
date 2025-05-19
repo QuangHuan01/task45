@@ -2,10 +2,12 @@ import { use, useEffect, useState } from "react";
 import "./App.css";
 const url = "https://dummyjson.com/products";
 
-const FetchAPI = async (page, limit, search) => {
+const FetchAPI = async (page, limit, search, sort) => {
   try {
     const res = await fetch(
-      `${url}/search?q=${search}&limit=${limit}&skip=${(page - 1) * limit}`
+      `${url}/search?q=${search}&limit=${limit}&skip=${
+        (page - 1) * limit
+      }&sortBy=${sort}`
       // https://dummyjson.com/products/search?q=${searchQuery}&limit=${limit}&skip=${skip}
     );
     const data = await res.json();
@@ -24,11 +26,11 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await FetchAPI(page, limit, search);
+      const res = await FetchAPI(page, limit, search, sort);
       setProducts(res);
     };
     fetchData();
-  }, [page, limit, search]);
+  }, [page, limit, search, sort]);
   console.log(search);
   const handlePage = (data) => {
     console.log(data);
@@ -43,21 +45,6 @@ function App() {
     setLimit(limit);
   };
 
-  const filterSort = (() => {
-    let filtered = products;
-    // .filter((item) =>
-    //   item.title.toLowerCase().includes(search.toLowerCase())
-    // );
-
-    if (sort === "asc") {
-      return [...filtered].sort((a, b) => a.price - b.price);
-    }
-    if (sort === "desc") {
-      return [...filtered].sort((a, b) => b.price - a.price);
-    }
-    return filtered;
-  })();
-
   return (
     <>
       <h1>Danh sách</h1>
@@ -70,8 +57,8 @@ function App() {
         </select>
         <select onChange={(e) => setSort(e.target.value)}>
           <option value="">Sắp xếp</option>
-          <option value="desc">⬇️ Giảm dần</option>
-          <option value="asc">⬆️ Tăng dần</option>
+          <option value="price&order=desc">⬇️ Giảm dần</option>
+          <option value="price&order=asc">⬆️ Tăng dần</option>
         </select>
         <input
           type="text"
@@ -81,7 +68,7 @@ function App() {
         />
       </div>
       <div className="product-list">
-        {filterSort.map((item) => (
+        {products.map((item) => (
           <div key={item.id} className="product-item">
             <img src={item.thumbnail} alt={item.title} />
             <p>
