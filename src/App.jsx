@@ -44,9 +44,10 @@ function App() {
   };
 
   const filterSort = (() => {
-    let filtered = products.filter((item) =>
-      item.title.toLowerCase().includes(search.toLowerCase())
-    );
+    let filtered = products;
+    // .filter((item) =>
+    //   item.title.toLowerCase().includes(search.toLowerCase())
+    // );
 
     if (sort === "asc") {
       return [...filtered].sort((a, b) => a.price - b.price);
@@ -63,9 +64,9 @@ function App() {
       <div className="controls">
         <select onChange={(e) => handleLimit(e.target.value)}>
           <option value="12">SET_LIMIT (12)</option>
-          <option value="12">12</option>
           <option value="20">20</option>
           <option value="30">30</option>
+          <option value="50">50</option>
         </select>
         <select onChange={(e) => setSort(e.target.value)}>
           <option value="">Sắp xếp</option>
